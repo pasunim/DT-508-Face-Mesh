@@ -103,6 +103,23 @@ pip install flask mediapipe opencv-python
 python main.py
 ```
 
+### 📥 โมเดล MediaPipe (.task)
+
+ไฟล์โมเดลทั้ง 3 ตัว (`face_landmarker.task`, `hand_landmarker.task`, `pose_landmarker.task`) ถูก commit ไว้ใน `static/models/` อยู่แล้ว จึง **ไม่ต้องดาวน์โหลดเพิ่ม** หลัง clone โปรเจกต์
+
+หากต้องการอัปเดตเป็นเวอร์ชันใหม่ หรือดาวน์โหลดใหม่อีกครั้ง สามารถรันคำสั่งด้านล่างนี้ (จะเขียนทับไฟล์เดิมใน `static/models/`):
+
+```bash
+# Face Landmarker
+curl -L -o static/models/face_landmarker.task https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
+
+# Hand Landmarker
+curl -L -o static/models/hand_landmarker.task https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+
+# Pose Landmarker
+curl -L -o static/models/pose_landmarker.task https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task
+```
+
 หลังจากรันสำเร็จ ระบบจะแสดงข้อความประมาณนี้ในเทอร์มินัล:
 
 ```
