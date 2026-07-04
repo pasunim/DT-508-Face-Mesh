@@ -10,6 +10,10 @@ const landmarkCountEl = document.getElementById("landmarkCount");
 const statusEl = document.getElementById("statusText");
 
 const layers = { mesh: true, eyes: true, lips: true, oval: true, label: false };
+const defaultColors = { mesh: "#c0c0c0", rightEye: "#ff3030", leftEye: "#30ff30", lips: "#e0e0e0", oval: "#f9a8d4", nose: "#ffd700" };
+const colors = { ...defaultColors };
+const defaultLineWidthScale = 1;
+let lineWidthScale = defaultLineWidthScale;
 let faceLandmarker = null;
 let drawingUtils = null;
 
@@ -19,6 +23,25 @@ window.toggleLayer = (name) => {
   if (btn) {
     btn.classList.toggle("active", layers[name]);
   }
+};
+
+window.setLayerColor = (name, hexColor) => {
+  colors[name] = hexColor;
+};
+
+window.resetColors = () => {
+  Object.assign(colors, defaultColors);
+  for (const [name, hex] of Object.entries(defaultColors)) {
+    const input = document.querySelector(`[data-color-layer="${name}"]`);
+    if (input) input.value = hex;
+  }
+  lineWidthScale = defaultLineWidthScale;
+  const lineWidthInput = document.getElementById("lineWidthRange");
+  if (lineWidthInput) lineWidthInput.value = defaultLineWidthScale;
+};
+
+window.setLineWidthScale = (value) => {
+  lineWidthScale = Number(value);
 };
 
 function setStatus(message) {
@@ -48,47 +71,47 @@ function drawFaceLandmarks(faceLandmarks) {
   for (const landmarks of faceLandmarks) {
     if (layers.mesh) {
       drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_TESSELATION, {
-        color: "#C0C0C040",
-        lineWidth: 0.5
+        color: `${colors.mesh}40`,
+        lineWidth: 1 * lineWidthScale
       });
     }
     if (layers.eyes) {
       drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {
-        color: "#FF3030",
-        lineWidth: 2
+        color: colors.rightEye,
+        lineWidth: 2 * lineWidthScale
       });
       drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYEBROW, {
-        color: "#FF6060",
-        lineWidth: 1.5
+        color: colors.rightEye,
+        lineWidth: 1.5 * lineWidthScale
       });
       drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE, {
-        color: "#30FF30",
-        lineWidth: 2
+        color: colors.leftEye,
+        lineWidth: 2 * lineWidthScale
       });
       drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LEFT_EYEBROW, {
-        color: "#60FF60",
-        lineWidth: 1.5
+        color: colors.leftEye,
+        lineWidth: 1.5 * lineWidthScale
       });
     }
     if (layers.lips) {
       drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LIPS, {
-        color: "#E0E0E0",
-        lineWidth: 2
+        color: colors.lips,
+        lineWidth: 2 * lineWidthScale
       });
     }
 
     if (layers.oval) {
       drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {
-        color: "#f9a8d4",
-        lineWidth: 2
+        color: colors.oval,
+        lineWidth: 2 * lineWidthScale
       });
     }
 
     if (layers.label) {
-      drawLandmarkWithLabel(landmarks, 33, "Right Eye", "#FF6060");
-      drawLandmarkWithLabel(landmarks, 263, "Left Eye", "#60FF60");
-      drawLandmarkWithLabel(landmarks, 1, "Nose", "#FFD700");
-      drawLandmarkWithLabel(landmarks, 13, "Mouth", "#f9a8d4");
+      drawLandmarkWithLabel(landmarks, 33, "Right Eye", colors.rightEye);
+      drawLandmarkWithLabel(landmarks, 263, "Left Eye", colors.leftEye);
+      drawLandmarkWithLabel(landmarks, 1, "Nose", colors.nose);
+      drawLandmarkWithLabel(landmarks, 13, "Mouth", colors.lips);
     }
   }
 }
